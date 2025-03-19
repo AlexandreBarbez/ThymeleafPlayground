@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Shopping-list</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+    </head>
+    <body>
+        <div class="row">
+            <nav>
+                <div class="nav-wrapper cyan">
+                    <div class="col s12">
+                        <a href="#" class="brand-logo white-text lighten-2">MaListeDeCourse</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="container">
+            <!-- Affichage global des erreurs -->
+            <div class="row">
+                <form class="valign-wrapper" th:action="@{/shopping-list/add}" method="post" th:object="${item}" >
+                    <div class="col s4">
+                        <label>Nom</label>
+                        <input type="text" th:field="*{name}"
+                               th:classappend="${#fields.hasErrors('name')} ? 'red lighten-4 error-placeholder' : ''"
+                               th:placeholder="${#fields.hasErrors('name')} ?'Nom manquant':'Ajouter un élément'">
+                    </div>
+                    <div class="col s4">
+                        <label>Description</label>
+                        <input type="text" th:field="*{description}">
+                    </div>
+                    <div class="col s2">
+                        <label>Quantité</label>
+                        <input type="number" th:field="*{quantity}"
+                               th:classappend="${#fields.hasErrors('quantity')} ? 'red lighten-4 error-placeholder' : ''"
+                               th:placeholder="${#fields.hasErrors('quantity')} ?'Quantité manquante':'Ajouter une quantité'">
+                    </div>
+                    <div class="col s2 center">
+                        <button type="submit" class="waves-effect waves-light btn">✅</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <ul class="collection with-header">
+                    <li class="collection-header"><h4>Mes produits</h4></li>
+                    <li class="collection-item" th:if="${items.isEmpty()}" > Votre liste est vide.</li>
+                    <li class="collection-item valign-wrapper" th:each="item : ${items}" th:unless="${items.isEmpty()}" >
+                        <span class="col s4" th:text="${item.name}"></span>
+                        <span class="col s4" th:text="${item.description}"></span>
+                        <span class="col s2" th:text="${item.quantity}"></span>
+                        <form class="col s2 center" th:action="@{/shopping-list/delete}" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+                            <button type="submit" class="waves-effect waves-light btn">❌</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--Erreurs -->
+        <div th:if="${param.error}">
+            <p style="color: red;">Erreur</p>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
